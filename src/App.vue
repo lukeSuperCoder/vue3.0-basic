@@ -6,11 +6,16 @@
 </template>
 
 <script lang="ts">
-import {ref,computed} from 'vue';
+import {ref,computed,reactive,toRefs} from 'vue';
+interface DataProps {
+   count: number;
+   double: number;
+   increase: () => void;
+}
 export default ({
   name: 'App',
   setup(){        //最开始加载时的方法，比create更早，这时候还没有this
-    const count = ref(0)
+   /* const count = ref(0)
     const increase= ()=> {
         count.value++;
     }
@@ -21,6 +26,15 @@ export default ({
       count,
       increase,
       double
+    }*/
+   const data: DataProps = reactive({
+     count:0,
+     double: computed(()=>data.count*2),
+     increase:()=>{data.count++}
+   })
+    const refData = toRefs(data)      //需要将data中的属性转换为响应式的对象，就是ref格式的，需要reactive和toRefs配合使用
+    return {
+     ...refData
     }
   }
 });
