@@ -33,11 +33,14 @@
 <script lang="ts">
 
 import { defineComponent } from 'vue';
-export default defineComponent({
+const component = defineComponent({       //vue3支持ts语法，用defineComponent包起来的代码方便使用ts语法
   name: 'HelloWorld',
   props: {
     msg: String,
   },
+  setup(prop,context){
+    prop.msg
+  }
 });
 </script>
 
