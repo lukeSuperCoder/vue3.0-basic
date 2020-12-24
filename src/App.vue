@@ -3,6 +3,16 @@
   <h1>{{count}}</h1>
   <h1>{{double}}</h1>
   <h1>{{greeting}}</h1>
+  <p>{{error1}}</p>
+ <!-- 异步加载asyncshow组件，可以设置加载和未加载状态-->
+  <Suspense>
+    <template #default>
+      <DogShow></DogShow>
+    </template>
+    <template #fallback>
+      <h1>Loading....</h1>
+    </template>
+  </Suspense>
   <h1>X:{{x}}</h1>
   <h1>Y:{{y}}</h1>
   <modal :isOpen="modalIsOpen" @close-modal="onModalClose"></modal>
@@ -19,10 +29,12 @@
   <h1>{{person.name}}</h1>
 </template>
 <script lang="ts">
-import {ref,computed,reactive,toRefs,onMounted,onUpdated,onRenderTriggered,watch} from 'vue';
+import {ref,computed,reactive,toRefs,onMounted,onUpdated,onRenderTriggered,watch,onErrorCaptured} from 'vue';
 import useMousePosition from "@/hooks/useMousePosition";
 import useURLLoader from "@/hooks/useURLLoader";
 import modal from "./components/modal.vue"
+import AsyncShow from "./components/AsyncShow.vue"
+import DogShow from "./components/DogShow.vue"
 interface DataProps {
    count: number;
    double: number;
@@ -60,6 +72,10 @@ export default ({
     })
     onRenderTriggered((event)=>{      //vue3.0提供的debugger调试方法，可以看到更新的内容变化
       console.log(event)
+    })
+    const error1 = ref(null)
+    onErrorCaptured((e: any)=>{
+      error1.value=e;
     })
     //data对象逻辑控制
    const data: DataProps = reactive({
@@ -101,7 +117,7 @@ export default ({
     return {
      ...refData,onMounted,onUpdated,onRenderTriggered,updateGreeting,greeting,
       x,y,loading,loader,result,error,
-      modalIsOpen,openModal,onModalClose
+      modalIsOpen,openModal,onModalClose,AsyncShow,DogShow,onErrorCaptured,error1
     }
   }
 });
